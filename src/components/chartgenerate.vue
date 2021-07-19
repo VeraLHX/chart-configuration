@@ -9,12 +9,11 @@
             :initH="120" 
             v-model:x="x"
             v-model:y="y"
-            v-model:w="w"
-            v-model:h="h"
+            v-model:w="size_hw.w"
+            v-model:h="size_hw.h"
             v-model:active="active"
             :draggable="true"
-            :resizable="true" 
-            :lockAspectRatio="true"
+            :resizable="true"  
             :on-remove="handleRemove"
             :referenceLineVisible="true"
             :grid=[20,20]
@@ -25,26 +24,28 @@
             @dragging="ondrag"
             @resizing="print('resizing')"
             
-            @resize-end="print('resize-end')"
+            @resize-end="print({h})"
         >
             <img :src="imgSrc[index].src" :resizable="true"> 
         </Vue3DraggableResizable> 
-      </DraggableContainer>  
+      </DraggableContainer>   
     </div>
 </template>
 
 <script>
 
-import Vue3DraggableResizable from 'vue3-draggable-resizable'
+//import Vue3DraggableResizable from 'vue3-draggable-resizable'
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 import {DraggableContainer} from 'vue3-draggable-resizable'
+import Vue3DraggableResizable from './vue3-draggable-resizable/Vue3DraggableResizable'
 export default {
     el:'#pic',
     name:"chartgenerate",
     components:{
         Vue3DraggableResizable,
-        DraggableContainer
-    },
+        DraggableContainer,
+         
+    }, 
     data(){
         return {
             positionX:0,
@@ -52,8 +53,12 @@ export default {
             x:this.data.x-450,
             y:this.data.y,
             index:this.data.type,
-            h:100,
-            w:100, 
+            h:100,    //高度
+            w:100,    //宽度
+            size_hw:{
+                h:100,
+                w:100
+            },
             active:false,
             imgSrc:[ 
                 {src:require('../assets/sandiantu.png')},
@@ -64,10 +69,10 @@ export default {
         }
     },
     props:{
-        data:Number
+        data:Number,
+        size:Number
     },
     methods:{
-         
         print(val){
             console.log(val)
         },
@@ -75,8 +80,24 @@ export default {
         ondrag(e){  
             this.positionX=e.x;
             this.positionY=e.y;
-            console.log(this.positon)
         }
+    },
+    //watch:{
+    //    h:function(){
+    //        console.log(this.h)
+    //    }
+    //},
+    created(){
+        this.$watch("size_hw",function(newValue,oldValue){ 
+                this.$emit("sendSize", newValue); 
+        },{deep:true,immediate: true})
+        this.$watch("size",function(newValue,oldValue){ 
+            if(this.active){
+                this.size_hw.h=this.size.h
+                this.size_hw.w=this.size.w
+            }
+                
+        },{deep:true,immediate: true})
     }
 }
 </script>

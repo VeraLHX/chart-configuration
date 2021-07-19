@@ -28,7 +28,7 @@
             <h2 style="left:30px;" :draggable="false">我是{{imgName[index]}}</h2>   
         </Vue3DraggableResizable> 
       </DraggableContainer>
-       
+       <div class="about" id="main"></div> 
     </div>
 </template>
 
@@ -37,6 +37,7 @@
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 import {DraggableContainer} from 'vue3-draggable-resizable'
+import * as echarts from 'echarts'
 export default {
     el:'#pic',
     name:"chartpic",
@@ -68,7 +69,10 @@ export default {
             ]
         }
     },
+    
+
     methods:{
+
         move(e){
             let odiv=e.target;   //获取目标元素
             //算出鼠标相对元素的位置
@@ -127,8 +131,29 @@ export default {
             console.log(e)
             this.positionX=e.x;
             this.positionY=e.y;
+        },
+        drawLine(){
+        // 基于准备好的dom，初始化echarts实例
+            let myChart = this.$echarts.init(document.getElementById('main'))
+            // 绘制图表
+            myChart.setOption({
+                title: { text: '在Vue中使用echarts' },
+                tooltip: {},
+                xAxis: {
+                    data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+                },
+                yAxis: {},
+                series: [{
+                    name: '销量',
+                    type: 'bar',
+                    data: [5, 20, 36, 10, 10, 20]
+                }]
+            });
         }
-    }
+    },
+    mounted() {    
+        this.drawLine() 
+    },
 }
 </script>
 

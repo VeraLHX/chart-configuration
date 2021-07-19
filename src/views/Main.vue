@@ -7,12 +7,14 @@
             <chartpic @sendValue="getValue"></chartpic>
         </div>
         <div class="main"> 
-                <chartgenerate :data="position" v-for="(item,index) in chart" :key="index"> 
+                <chartgenerate @sendSize="getSize" :data="position" :size="size_hw" v-for="(item,index) in chart" :key="index"> 
                      
-                <h2 style="left:30px;" :draggable="false">我是图{{index}}</h2> 
                 </chartgenerate> 
+                <div class="about" id="chart" style="width:500px; height:500px" ></div>
         </div>
-        <div class="right">right</div>
+        <div class="right">
+            <config v-if="type!=-1" :size="size_hw" @sendHeight="getHeight" @sendWidth="getWidth"></config>
+        </div>
     </div>
     <div class="footer">footer</div>
 </template>
@@ -20,6 +22,7 @@
 <script>
 import chartpic from "../components/chartpicture.vue"
 import chartgenerate from "../components/chartgenerate.vue"
+import config from "../components/configuration.vue"
 export default {
     name:"Main",
     data(){
@@ -30,6 +33,10 @@ export default {
                 y:0,
                 type:-1
             },
+            size_hw:{
+                h:100,
+                w:100
+            },
             positionX:0,
             positionY:0,
             chart:[ 
@@ -39,18 +46,19 @@ export default {
     },
     components:{
         chartpic,
-        chartgenerate
+        chartgenerate,
+        config
     },
     methods:{ 
         addNode:function() {
-            console.log(this.positionX)
-            console.log(this.positionY)
+            //console.log(this.positionX)
+            //console.log(this.positionY)
             this.position.x=this.positionX
             this.position.y=this.positionY
             this.position.type=this.type
-            console.log(typeof(this.position))
+            //console.log(typeof(this.position))
             this.chart.push({type: this.type, positionX:this.positionX , positionY:this.positionY});
-            console.log(this.chart)
+            //console.log(this.chart)
         },
         getValue(value){
             console.log("from components:",value)
@@ -58,16 +66,44 @@ export default {
             this.positionX=value.positionX
             this.positionY=value.positionY
             this.addNode()
-            this.type=-1
+            this.type=0
+        },
+        getSize(size){
+            console.log("size:",size)
+            this.size_hw.h=size.h
+            this.size_hw.w=size.w
+        },
+        getHeight(h){
+            console.log("h:",h)
+            this.size_hw.h=h 
+        },
+        getWidth(w){
+            console.log("w:",w) 
+            this.size_hw.w=w
+        },
+        drawLine(){
+        // 基于准备好的dom，初始化echarts实例
+            //console.log("drawLine")
+            let myChart = this.$echarts.init(document.getElementById('chart'))
+            // 绘制图表
+            myChart.setOption({
+                title: { text: '在Vue中使用echarts' },
+                tooltip: {},
+                xAxis: {
+                    data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+                },
+                yAxis: {},
+                series: [{
+                    name: '销量',
+                    type: 'bar',
+                    data: [5, 20, 36, 10, 10, 20]
+                }]
+            });
         }
     },
-    created(){
-        this.$watch("type",function(newValue,oldValue){
-            if(this.type!=-1){
-                console.log("add")
-            }
-        })
-    }
+    mounted() {    
+        this.drawLine() 
+    },
 
 }
 </script>
@@ -104,10 +140,10 @@ export default {
     box-sizing: border-box;
     
     height:91vh;
-    width:1100px;
+    width:1500px;
     float: left;
     margin-left: 450px;
-    background: #C4C4FF;
+    background: #fff;
 }
 
 .left{
@@ -126,9 +162,9 @@ export default {
     
     height:91vh;
     position: absolute;
-    width:340px;
+    width:465px;
     float:right;
-    margin-left: 1550px;
+    margin-left: 1950px;
     background: lightcyan;
 }
 
