@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # chart_generator
 
 ## Project setup
@@ -22,3 +23,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+# chart-configuration
+>>>>>>> f556e79ec93a66a17e5199974711a77b14c3cf59
