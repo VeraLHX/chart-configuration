@@ -1,5 +1,7 @@
 <template>
-    <div class="header">header</div>
+    <div class="header">
+        <h1>图标配置平台</h1>
+    </div>
     <div class="divall">
         <div class="left">
             <chartpic @sendValue="getValue"></chartpic>
