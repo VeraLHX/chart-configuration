@@ -37,7 +37,7 @@
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 import {DraggableContainer} from 'vue3-draggable-resizable'
-import * as echarts from 'echarts'
+//import * as echarts from 'echarts'
 export default {
     el:'#pic',
     name:"chartpic",

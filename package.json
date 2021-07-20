@@ -11,6 +11,7 @@
     "core-js": "^3.6.5",
     "echarts": "^5.1.2",
     "element-plus": "^1.0.2-beta.55",
+    "jquery": "^3.6.0",
     "vue": "^3.0.0",
     "vue-draggable-resizable": "^2.3.0",
     "vue-draggable-resizable-gorkys": "^2.4.4",

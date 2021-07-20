@@ -10,7 +10,7 @@
                 <chartgenerate @sendSize="getSize" :data="position" :size="size_hw" v-for="(item,index) in chart" :key="index"> 
                      
                 </chartgenerate> 
-                <div class="about" id="chart" style="width:500px; height:500px" ></div>
+                <!--<div class="about" id="chart" style="width:500px; height:500px" ></div>-->
         </div>
         <div class="right">
             <config v-if="type!=-1" :size="size_hw" @sendHeight="getHeight" @sendWidth="getWidth"></config>
@@ -27,11 +27,12 @@ export default {
     name:"Main",
     data(){
         return{
-            type:-1,
+            type:-1, 
             position:{
                 x:0,
                 y:0,
-                type:-1
+                type:-1,
+                no:0
             },
             size_hw:{
                 h:100,
@@ -59,6 +60,7 @@ export default {
             //console.log(typeof(this.position))
             this.chart.push({type: this.type, positionX:this.positionX , positionY:this.positionY});
             //console.log(this.chart)
+            this.position.no+=1
         },
         getValue(value){
             console.log("from components:",value)
@@ -102,7 +104,7 @@ export default {
         }
     },
     mounted() {    
-        this.drawLine() 
+        //this.drawLine() 
     },
 
 }
