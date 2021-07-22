@@ -4,8 +4,9 @@
     <img src="../assets/logo.png" @mousedown="move"> -->
 
   <div class="imgbox">
-    <DraggableContainer :adsorbParent="true">
+    <DraggableContainer :adsorbParent="true" class="ddd">
       <Vue3DraggableResizable
+        class="ccc"
         :initW="300"
         :initH="300"
         v-model:x="x"
@@ -18,6 +19,7 @@
         :on-remove="handleRemove"
         :referenceLineVisible="true"
         :grid="[20, 20]"
+        :common-class-name="commonClassName"
         @activated="print('activated')"
         @deactivated="print('deactivated')"
         @drag-start="print('drag-start')"
@@ -35,6 +37,7 @@
           :resizable="true"
           :visiable="true"
         ></div>
+        <i v-show="active" class="close el-icon-error" @click="remove()"></i>
       </Vue3DraggableResizable>
     </DraggableContainer>
   </div>
@@ -61,13 +64,14 @@ export default {
       y: this.data.y,
       index: this.data.type,
       no: this.data.no,
+      Cnum: this.data.num,
       h: 300, //高度
       w: 300, //宽度
       radius: 50,
       title: this.title_c,
       size_hw: {
-        h: 100,
-        w: 100,
+        h: 300,
+        w: 300,
       },
       active: false,
       imgSrc: [
@@ -81,6 +85,7 @@ export default {
   props: {
     data: Number,
     size: Number,
+    num: Number,
     title_c: String,
   },
   methods: {
@@ -90,6 +95,9 @@ export default {
     setHeight() {
       this.h = this.size_hw.h;
       this.w = this.size_hw.w;
+    },
+    remove() {
+      this.$emit("remove", this.no - 1);
     },
     ondrag(e) {
       console.log(e.x);
@@ -282,8 +290,12 @@ export default {
     );
     this.$watch(
       "size",
-      function (newValue, oldValue) {
+      function (newValue, oldValue) { 
         if (this.active) {
+          let id = "#" + this.generateID();
+          let timeh = this.size.h / this.h;
+          let timew = this.size.w / this.w;
+          $(id).css("transform", "scale(" + timew + "," + timeh + ")");
           this.size_hw.h = this.size.h;
           this.size_hw.w = this.size.w;
         }
@@ -293,12 +305,34 @@ export default {
     this.$watch(
       "title_c",
       function (newValue, oldValue) {
-        console.log(newValue);
+        console.log("1111111111newValue");
         if (newValue === "" && this.title != "") {
           if (this.index === 3) this.drawBar();
           else if (this.index === 1) this.drawPie();
           else if (this.index === 2) this.drawLine();
           else this.drawDot();
+        }
+      },
+      { deep: true, immediate: true }
+    );
+    this.$watch(
+      "num",
+      function (newValue, oldValue) {
+        if (this.active == true) {
+          this.active = false;
+        }
+        if (this.no == this.num) {
+          this.active = true;
+        }
+      },
+      { deep: true, immediate: true }
+    );
+    this.$watch(
+      "active",
+      function (newValue, oldValue) {
+        if (newValue === true) {
+          //更换被选中组件
+          this.$emit("sendIndex", this.no);
         }
       },
       { deep: true, immediate: true }
@@ -317,5 +351,13 @@ export default {
 }
 .echart {
   text-align: center;
+}
+.el-icon-error {
+  font-size: 16px;
+  position: absolute;
+  top: -20px;
+  right: -18px;
+  z-index: 100;
+  cursor: pointer;
 }
 </style>

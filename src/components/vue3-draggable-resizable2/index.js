@@ -3973,14 +3973,19 @@ function initState(props, emit) {
     emit('update:active', newVal);
 
     if (!oldVal && newVal) {
+      //设置为激活
+      console.log("1", oldVal, newVal);
       emit('activated');
     } else if (oldVal && !newVal) {
-      emit('activated'); //de
+      //设置为不激活
+      console.log("2", oldVal, newVal);
+      emit('deactivated'); //de
     }
   });
   Object(external_commonjs_vue_commonjs2_vue_root_Vue_["watch"])(function () {
     return props.active;
   }, function (newVal) {
+    console.log("测试testtttt", newVal);
     setEnable(newVal);
   });
   return {
@@ -4158,13 +4163,18 @@ function initDraggableContainer(containerRef, containerProps, limitProps, dragga
   var _unselect = function _unselect(e) {
     var _containerRef$value;
 
-    var target = e.target;
+    //console.log((<Element>e.target).tagName)
+    var target = e.target; //console.log("转换",(<Element>target).tagName)
 
     if (!((_containerRef$value = containerRef.value) === null || _containerRef$value === void 0 ? void 0 : _containerRef$value.contains(target))) {
-      setEnable(false);
-      setDragging(false);
-      setResizing(false);
-      setResizingHandle('');
+      //点击其他地方
+      if (target.tagName == "CANVAS" || target.tagName == "BUTTON") {
+        setEnable(false); //false,测试  点击其他地方不取消active状态
+
+        setDragging(false);
+        setResizing(false);
+        setResizingHandle('');
+      }
     }
   };
 
@@ -4609,6 +4619,10 @@ var VdrProps = {
     validator: function validator(handles) {
       return filterHandles(handles).length === handles.length;
     }
+  },
+  commonClassName: {
+    type: String,
+    default: ''
   },
   classNameDraggable: {
     type: String,

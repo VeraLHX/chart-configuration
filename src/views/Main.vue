@@ -13,21 +13,30 @@
         :data="position"
         :size="size_hw"
         :title_c="title"
+        :num="num"
+        @remove="removeChart"
+        @sendIndex="getIndex"
         v-for="(item, index) in chart"
         :key="index"
+        v-show="chart[index].show"
       >
       </chartgenerate>
       <!--<div class="about" id="chart" style="width:500px; height:500px" ></div>-->
     </div>
     <div class="right">
       <h2>属性配置</h2>
-      <config
-        v-if="type != -1"
-        :size="size_hw"
-        @sendHeight="getHeight"
-        @sendWidth="getWidth"
-        @sendTitle="getTitle"
-      ></config>
+      <div v-if="activeNo != 0">
+        <config
+          v-for="(item, index) in chart"
+          :key="index"
+          :size="size_hw"
+          :no="activeNo"
+          :n="index"
+          @sendHeight="getHeight"
+          @sendWidth="getWidth"
+          @sendTitle="getTitle"
+        ></config>
+      </div>
     </div>
   </div>
   <div class="footer">
@@ -52,14 +61,16 @@ export default {
         no: 0,
       },
       size_hw: {
-        h: 100,
-        w: 100,
+        h: 300,
+        w: 300,
       },
       positionX: 0,
       positionY: 0,
       chart: [],
       isAble: true,
       title: "",
+      num: 0,
+      activeNo: 0,
     };
   },
   components: {
@@ -79,10 +90,13 @@ export default {
         type: this.type,
         positionX: this.positionX,
         positionY: this.positionY,
+        show: true,
       });
       //console.log(this.chart)
       this.position.no += 1;
+      this.num += 1;
       this.isAble = false;
+      //console.log("testactive",this.activeNo)
     },
     getValue(value) {
       console.log("from components:", value);
@@ -98,7 +112,7 @@ export default {
       this.size_hw.w = size.w;
     },
     getHeight(h) {
-      console.log("h:", h);
+      console.log("height changing");
       this.size_hw.h = h;
     },
     getWidth(w) {
@@ -106,29 +120,18 @@ export default {
       this.size_hw.w = w;
     },
     getTitle(title) {
-      //console.log(title);
-      this.titie = title;
+      for(var i=0;i<title.length;i++){
+        this.title[i]+=title[i]      //有问题！！！！
+      } 
+      console.log(this.title)
     },
-    drawLine() {
-      // 基于准备好的dom，初始化echarts实例
-      //console.log("drawLine")
-      let myChart = this.$echarts.init(document.getElementById("chart"));
-      // 绘制图表
-      myChart.setOption({
-        title: { text: "在Vue中使用echarts" },
-        tooltip: {},
-        xAxis: {
-          data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
-        },
-        yAxis: {},
-        series: [
-          {
-            name: "销量",
-            type: "bar",
-            data: [5, 20, 36, 10, 10, 20],
-          },
-        ],
-      });
+    getIndex(no) {
+      this.activeNo = no;
+    },
+    removeChart(no) {
+      this.chart[no].show = false; //设置为不显示
+      this.num -= 1;
+      if (this.num == 0) this.isAble = true;
     },
     dataURLToBlob(dataurl) {
       //ie 图片转格式
