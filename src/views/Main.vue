@@ -120,10 +120,11 @@ export default {
       this.size_hw.w = w;
     },
     getTitle(title) {
-      for(var i=0;i<title.length;i++){
-        this.title[i]+=title[i]      //有问题！！！！
-      } 
-      console.log(this.title)
+      this.title = "";
+      for (var i = 0; i < title.length; i++) {
+        this.title += title[i];
+      }
+      console.log(this.title);
     },
     getIndex(no) {
       this.activeNo = no;

@@ -290,7 +290,7 @@ export default {
     );
     this.$watch(
       "size",
-      function (newValue, oldValue) { 
+      function (newValue, oldValue) {
         if (this.active) {
           let id = "#" + this.generateID();
           let timeh = this.size.h / this.h;
@@ -305,12 +305,26 @@ export default {
     this.$watch(
       "title_c",
       function (newValue, oldValue) {
-        console.log("1111111111newValue");
-        if (newValue === "" && this.title != "") {
-          if (this.index === 3) this.drawBar();
-          else if (this.index === 1) this.drawPie();
-          else if (this.index === 2) this.drawLine();
-          else this.drawDot();
+        if (this.active) {
+          if (this.title_c != "") {
+            //若新标题不为空
+            this.title = "";
+            for (var i = 0; i < this.title_c.length; i++) {
+              this.title += this.title_c[i];
+            }
+            if (this.index === 3) this.drawBar();
+            else if (this.index === 1) this.drawPie();
+            else if (this.index === 2) this.drawLine();
+            else this.drawDot();
+          } else {
+            if (this.title != "") {
+              this.title = "";
+              if (this.index === 3) this.drawBar();
+              else if (this.index === 1) this.drawPie();
+              else if (this.index === 2) this.drawLine();
+              else this.drawDot();
+            }
+          }
         }
       },
       { deep: true, immediate: true }
